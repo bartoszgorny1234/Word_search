@@ -5,19 +5,35 @@ class Anagram:
         self._board=[]
 
     def create_board(self):
-        emptylist = []
+        empty_list = []
         for _ in range(0, self._x):
-            emptylist.append("")
+            empty_list.append("")
         for _ in range(0, self._y):
-            self._board.append(emptylist)
+            self._board.append(empty_list)
 
     def show_board(self):
         for row in self._board:
             print(row)
 
+    def get_line(self, vertical: bool, number: int) -> str:
+        line = []
+        if vertical:
+            for row in self._board:
+                line.append(row[number])
+        else:
+            line = self._board[number]
+        return line
+
+    def get_random_line(self):
+        pass
 
 
-test = Anagram(4,5)
+
+
+# Tutaj sobie testuje różne funkcjonalności
+test = Anagram(4, 5)
 
 test.create_board()
 test.show_board()
+print(test.get_line(True, 2))
+print(test.get_line(False, 2))
