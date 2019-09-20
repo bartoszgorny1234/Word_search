@@ -1,1 +1,1 @@
-select * from slownikn 
+select * from slownik
