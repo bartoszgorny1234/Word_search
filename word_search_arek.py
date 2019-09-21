@@ -10,7 +10,7 @@ class WordSearch:
     def create_my_board(self):
         for _ in range(0, self._x * self._y):
             self._board.append('')
-        print(f'This is my board: {self._board}')
+        print(f'This is my board: {self._board}\n')
 
     def show_board(self):
         n = 0
@@ -25,42 +25,69 @@ class WordSearch:
             self._board[0 + n] = e
             n += 1
 
-    def add_random_word(self):
+    def word_start_position(self):
+        # losuję lokalizację początkowej litery
+        word_starts_at = random.randrange(0, self._x * self._y - 1, 1)
+        print(f"\n1. Wylosowałem lokalizację początkowej litery: {word_starts_at}")
+        input("                 Press Enter to continue...")
+
         # losuję pion lub poziom
         horizontal = random.choice([True, False])
+        print(f'\n2. Horizontal [True/False]: {horizontal}')
+        input("                 Press Enter to continue...")
 
-        # losuję lokalizację początkowej litery
-        # sprawdz czy nie wylosuje mi tutaj za dużej liczby - może jakiś test?
-        word_starts_at = random.randrange(0, self._x * self._y - 2, 1)
-
+        # checking if its possible to add word with minimum 2 letters:
         if horizontal:
-            print(f'horizontal word starts at {word_starts_at}')
-            if word_starts_at % self._x+1:
-                print('You cannot put your horizontal word here')
+            # checking if possible to put two-letter-word horizontal here
+            print(f'\n3. Word starts at position: {word_starts_at}, as horizontal.')
+            if word_starts_at % self._x == word_starts_at-1:
+                print('\nYou cannot put your horizontal word here. Only one letter word match here.')
+                input("                 Press Enter to continue...")
+                new_board_test.word_start_position()    #chwilowo, potem ogramy ogólnym programem
             else:
-                print('You can put your horizontal word here')
+                print('You can put your horizontal word here.')
+                new_board_test.match_word_to_position(horizontal, word_starts_at)
 
         else:
-            word_starts_at = random.randrange(0, self._x * self._y - 2, 1)
-            print(f'vartical word starts at {word_starts_at}')
+            # checking if possible to add minimum two-letter vertical word here
+            print(f'\n3. Word starts at position: {word_starts_at}, as vertical.')
+            if word_starts_at % self._y == word_starts_at-1:
+                print('\nYou cannot put your vertical word here . Only one letter word match here.')
+                input("                     Press Enter to continue...")
+                new_board_test.word_start_position()
+            else:
+                print('You can put your vertical word here.')
+                new_board_test.match_word_to_position(horizontal, word_starts_at)
 
 
 
+    def match_word_to_position(self, vector, position, word='ul'):
+        n = 0  # zmienna pomocniczna
+        m = self._x  # zmienna pomocnicza
+        print(position)
+        print(vector)
+        if vector:
+            for horizontal_letter in word:
+                self._board[position + n] = horizontal_letter
+                n += 1
+        else:
+            for vertical_letter in word:
+                self._board[position + m] = vertical_letter
+                m += self._x
+        self.show_board()
 
-new_board_test = WordSearch(4, 5)
-# tworzę pustą tablicę
+# zrob testy
+
+
+new_board_test = WordSearch(4, 4)
+
 new_board_test.create_my_board()
 
-print('Printuję pustą tablicę')
 new_board_test.show_board()
 
-# dodaję testowe słowo do tablicy
-new_board_test.test_word()
+# new_board_test.test_word()
 
-# printuję zmienioną tablicę
-print('Printuję zmienioną tablicę')
-new_board_test.show_board()
+new_board_test.word_start_position()
+input("                 Press Enter to continue...")
 
-print('Adding random word')
-new_board_test.add_random_word()
-
+# new_board_test.show_board()
