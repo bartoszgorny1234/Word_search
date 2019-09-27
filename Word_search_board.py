@@ -1,3 +1,4 @@
+from typing import List
 from string import ascii_letters
 from random import random, randint, choice
 
@@ -9,12 +10,11 @@ class Word_search_board:
         self._board = []
 
     def create_board(self):
-        n=0
+        self._board = []
         for _ in range(0, self._y):
             empty_list = []
             for _ in range(0, self._x):
-                empty_list.append("")
-                n += 1
+                empty_list.append("*")
             self._board.append(empty_list)
 
     def show_board(self):
@@ -23,83 +23,69 @@ class Word_search_board:
 
     def check_line(self, vertical: bool, number: int):
         if vertical:
-            if number >= self._x:
+            if number >= self._y or number < 0:
                 raise ValueError
         else:
-            if number >= self._y:
+            if number >= self._x or number < 0:
                 raise ValueError
-
 
     def get_line(self, vertical: bool, number: int) -> list:
         self.check_line(vertical, number)
         line = []
         if vertical:
             for num in range(0, self._y):
-                line.append(self._board[num][number])
+                line.append(self._board[number][num])
         else:
             line = self._board[number]
         return line
 
-    def get_random_line(self):
+    def get_random_position(self, word: str):
+        len_word = len(word)
         vertical = random() < 0.5
         if vertical:
-            num = randint(0, self._x-1)
+            num = randint(0, self._x)
+            shift = randint(0, (self._y-len_word))
         else:
-            num = randint(0, self._y-1)
-        return self.get_line(vertical, num)
+            num = randint(0, self._y)
+            shift = randint(0, (self._x-len_word))
+        return vertical, num, shift
 
-    def insert_word(self, vertical: bool, number: int, word: str):
+    def check_word(self, word: List, vertical: bool, number: int, shift: int):
+        line = self.get_line(vertical, number)
+        if (len(word)+shift) > len(line):
+            raise ValueError
+        else:
+            for num in range(0, len(word)):
+                    if line[num+shift] != "*" and word[num] != line[num+shift]:
+                        raise ValueError
+
+    def insert_word(self, word: str, vertical: bool, number: int, shift: int):
         word = list(word.upper())
+        self.check_word(word, vertical, number, shift)
         for num, letter in enumerate(word, 0):
             if vertical:
-                self._board[num][number] = letter
+                self._board[num+shift][number] = letter
             else:
-                self._board[number][num] = letter
+                self._board[number][num+shift] = letter
+
+    def insert_word_in_rand(self, word: str):
+        pos = self.get_random_position(word)
+        self.insert_word(word, *pos)
 
     def random_letters(self):
         for x in range(0, self._x):
             for y in range(0, self._y):
-                if self._board[y][x] == "":
+                if self._board[y][x] == "*":
                     self._board[y][x] = choice(ascii_letters.upper())
 
-# Tutaj sobie testuje różne funkcjonalności
-word_list = ["agar",
-             "agencja",
-             "agencyjny",
-             "agenda",
-             "agenturalny",
-             "agentura",
-             "agitacja",
-             "agitka",
-             "agitować",
-             "aglomeracja",
-             "aglomerować",
-             "aglutynacja",
-             "agnostycyzm",
-             "agnostyk",
-             "agnozja",
-             "agonalny",
-             "agonia",
-             "agonistyczny",
-             "agora",
-             "agrafia"]
-print(word_list[0:10:2])
-test = Word_search_board(4, 5)
 
-test.create_board()
-test.show_board()
-print("\n"*2)
-test.check_line(False, 4)
-print(test.get_line(True, 3)) #min0 max3
-print(test.get_line(False, 4)) #min0 max4
-print("\n"*2)
-print(test.get_random_line())
-print(test.get_random_line())
-print(test.get_random_line())
-print("\n"*2)
-test.insert_word(False, 1, "tata")
-test.insert_word(True, 1, "mAma")
-test.show_board()
-print("\n"*2)
-test.random_letters()
-test.show_board()
+
+# word_list = ["agar"]
+# game = Word_search_board(4, 4)
+# game.create_board()
+# game.show_board()
+# word = word_list[0]
+# print(word)
+# position = game.get_random_position(word)
+# game.insert_word(*position, word)
+# game.show_board()
