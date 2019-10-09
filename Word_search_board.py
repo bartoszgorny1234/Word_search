@@ -34,7 +34,7 @@ class Word_search_board:
         line = []
         if vertical:
             for num in range(0, self._y):
-                line.append(self._board[number][num])
+                line.append(self._board[num][number])
         else:
             line = self._board[number]
         return line
@@ -43,11 +43,11 @@ class Word_search_board:
         len_word = len(word)
         vertical = random() < 0.5
         if vertical:
-            num = randint(0, self._x)
-            shift = randint(0, (self._y-len_word))
+            num = randint(0, self._x-1)
+            shift = randint(0, (self._y-len_word-1))
         else:
-            num = randint(0, self._y)
-            shift = randint(0, (self._x-len_word))
+            num = randint(0, self._y-1)
+            shift = randint(0, (self._x-len_word-1))
         return vertical, num, shift
 
     def check_word(self, word: List, vertical: bool, number: int, shift: int):
@@ -56,17 +56,20 @@ class Word_search_board:
             raise ValueError
         else:
             for num in range(0, len(word)):
-                    if line[num+shift] != "*" and word[num] != line[num+shift]:
-                        raise ValueError
+                if line[num+shift] != "*" and word[num] != line[num+shift]:
+                    raise ValueError
 
     def insert_word(self, word: str, vertical: bool, number: int, shift: int):
         word = list(word.upper())
-        self.check_word(word, vertical, number, shift)
-        for num, letter in enumerate(word, 0):
-            if vertical:
-                self._board[num+shift][number] = letter
-            else:
-                self._board[number][num+shift] = letter
+        try:
+            self.check_word(word, vertical, number, shift)
+            for num, letter in enumerate(word, 0):
+                if vertical:
+                    self._board[num+shift][number] = letter
+                else:
+                    self._board[number][num+shift] = letter
+        except ValueError:
+            raise ValueError
 
     def insert_word_in_rand(self, word: str):
         pos = self.get_random_position(word)

@@ -115,4 +115,65 @@ class Test_class(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.board2.check_word(["M", "A"], False, 0, 11)
 
-    def
+    def test_04_insert_word(self):
+        print("04_1 insert word")
+        self.assertIsNone(self.board1.insert_word("MAMA", True, 0, 0))
+        self.assertIsNone(self.board1.insert_word("MAMA", False, 2, 0))
+        self.assertIsNone(self.board1.insert_word("MA", True, 2, 2))
+        self.assertIsNone(self.board1.insert_word("MA", False, 0, 2))
+
+        self.assertIsNone(self.board2.insert_word("MAMAMAMAMA", True, 0, 0))
+        self.assertIsNone(self.board2.insert_word("MAMAMAMAMAMA", False, 0, 0))
+        self.assertIsNone(self.board2.insert_word("MA", True, 2, 8))
+        self.assertIsNone(self.board2.insert_word("MA", False, 2, 10))
+
+
+    def test_04_2_insert_word(self):
+        print("04_2 insert word with error")
+        with self.assertRaises(ValueError):
+            self.board1.insert_word("MAMAMA", True, 0, 0)
+        with self.assertRaises(ValueError):
+            self.board1.insert_word("MAMAMA", False, 3, 0)
+        with self.assertRaises(ValueError):
+            self.board1.insert_word("MA", True, 0, 3)
+        with self.assertRaises(ValueError):
+            self.board1.insert_word("MA", False, 3, 3)
+
+        self.board1.insert_word("MAMA", False, 2, 0)
+        self.board1.insert_word("MAMA", True, 0, 0)
+        with self.assertRaises(ValueError):
+            self.board1.insert_word("MA", False, 1, 0)
+        with self.assertRaises(ValueError):
+            self.board1.insert_word("MA", True, 2, 1)
+
+        with self.assertRaises(ValueError):
+            self.board2.insert_word("MAMAMAMAMAMA", True, 0, 0)
+        with self.assertRaises(ValueError):
+            self.board2.insert_word("MAMAMAMAMAMAM", False, 0, 0)
+        with self.assertRaises(ValueError):
+            self.board2.insert_word("MA", True, 0, 9)
+        with self.assertRaises(ValueError):
+            self.board2.insert_word("MA", False, 0, 11)
+
+    def test_05_randomposition(self):
+        print("05_random_position")
+        for _ in range(0, 100):
+            pos = self.board1.get_random_position("MA")
+            if pos[0]:
+                self.assertLess(pos[1], 4)
+                self.assertLess(pos[2], 2)
+            else:
+                self.assertLess(pos[1], 4)
+                self.assertLess(pos[2], 2)
+        for _ in range(0, 100):
+            pos = self.board2.get_random_position("MA")
+            if pos[0]:
+                self.assertGreaterEqual(pos[1], 0)
+                self.assertGreaterEqual(pos[2], 0)
+                self.assertLess(pos[1], 12)
+                self.assertLess(pos[2], 8)
+            else:
+                self.assertGreaterEqual(pos[1], 0)
+                self.assertGreaterEqual(pos[2], 0)
+                self.assertLess(pos[1], 10)
+                self.assertLess(pos[2], 10)
