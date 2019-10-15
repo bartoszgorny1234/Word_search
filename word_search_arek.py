@@ -18,12 +18,12 @@ class WordSearch:
             print(self._board[self._x * n: self._x * (n + 1)])
             n += 1
 
-    def test_word(self):
-        n = 0
-        testword = 'mama'
-        for e in testword:
-            self._board[0 + n] = e
-            n += 1
+    # def test_word(self):
+    #     n = 0
+    #     testword = 'mama'
+    #     for e in testword:
+    #         self._board[0 + n] = e
+    #         n += 1
 
     def word_start_position(self):
         # losuję lokalizację początkowej litery
@@ -40,28 +40,48 @@ class WordSearch:
         if horizontal:
             # checking if possible to put two-letter-word horizontal here
             print(f'\n3. Word starts at position: {word_starts_at}, as horizontal.')
-            if word_starts_at % self._x == word_starts_at-1:
+            if word_starts_at % self._x == word_starts_at - 1:
                 print('\nYou cannot put your horizontal word here. Only one letter word match here.')
                 input("                 Press Enter to continue...")
-                new_board_test.word_start_position()    #chwilowo, potem ogramy ogólnym programem
+                new_board_test.word_start_position()  # chwilowo, potem ogramy ogólnym programem
             else:
                 print('You can put your horizontal word here.')
-                new_board_test.match_word_to_position(horizontal, word_starts_at)
-
+                # new_board_test.match_word_to_position(horizontal, word_starts_at)
+                new_board_test.max_word_lenght(horizontal, word_starts_at)
         else:
             # checking if possible to add minimum two-letter vertical word here
             print(f'\n3. Word starts at position: {word_starts_at}, as vertical.')
-            if word_starts_at % self._y == word_starts_at-1:
+            if word_starts_at % self._y == word_starts_at - 1:
                 print('\nYou cannot put your vertical word here . Only one letter word match here.')
                 input("                     Press Enter to continue...")
                 new_board_test.word_start_position()
             else:
                 print('You can put your vertical word here.')
-                new_board_test.match_word_to_position(horizontal, word_starts_at)
+                # new_board_test.match_word_to_position(horizontal, word_starts_at)
+                new_board_test.max_word_lenght(horizontal, word_starts_at)
+
+    def max_word_lenght(self, vector: bool, position: int) -> int:
+        print(vector)
+        if vector:
+            max_word_lenght = self._x - (position % self._x)
+            print(f'\nMax word lenght is {max_word_lenght}.')
+            input("                     Press Enter to continue...")
+
+        else:
+            max_word_lenght = int(self._x - (position / self._x)) + 1
+            print(f'\nMax word lenght is {max_word_lenght}.')
+            input("                     Press Enter to continue...")
+
+        new_board_test.draw_word(max_word_lenght)
+
+
+    def draw_word(self, max_wod_lenght):
+
+        print('drawing word')
 
 
 
-    def match_word_to_position(self, vector, position, word='ul'):
+    def match_word_to_position(self, vector: bool, position, word='ul'):  # position
         n = 0  # zmienna pomocniczna
         m = self._x  # zmienna pomocnicza
         print(position)
@@ -75,6 +95,7 @@ class WordSearch:
                 self._board[position + m] = vertical_letter
                 m += self._x
         self.show_board()
+
 
 # zrob testy
 
